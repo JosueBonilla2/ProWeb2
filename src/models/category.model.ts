@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose"
 import { Category, CategoryModel } from '../types/category.type'
 import { USER_REFERENCE } from './user.model'
+import { ObjectId } from "mongoose"
 
 const Categories = new Schema<Category, CategoryModel>({
   titulo: {
