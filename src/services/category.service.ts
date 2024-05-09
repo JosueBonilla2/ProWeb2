@@ -4,11 +4,11 @@ import boom from '@hapi/boom'
 import { ObjectId } from 'mongoose'
 
 class CategoryService {
-  async create(category: Category, userId:ObjectId) {
+  async create(category: Category, userId: ObjectId) {
     const newCategory = await Categories.create({
       ...category,
-       user: userId,
-      }).catch((error) => {
+      user: userId,
+    }).catch((error) => {
       console.log('Could not save category', error)
     })
 
@@ -19,10 +19,10 @@ class CategoryService {
 
   async findAll() {
     const categories = await Categories.find()
-    .populate([{ path: 'user', strictPopulate: false }])
-    .catch((error) => {
-      console.log('Error while connecting to the DB', error)
-    })
+      .populate([{ path: 'user', strictPopulate: false }])
+      .catch((error) => {
+        console.log('Error while connecting to the DB', error)
+      })
 
     if (!categories) {
       throw boom.notFound('There are not categories')
@@ -30,7 +30,7 @@ class CategoryService {
 
     return categories
   }
-  
+
   async findById(id: string) {
     const category = await Categories.findById(id).catch((error) => {
       console.log('Error while connecting to the DB', error)
@@ -55,23 +55,36 @@ class CategoryService {
   }
 
   async deleteById(id: string) {
-    const categoryToDelete = await Categories.findById(id);
+    const categoryToDelete = await Categories.findById(id)
     if (!categoryToDelete) {
-        throw new Error("La categoría no existe");
+      throw new Error("La categoría no existe")
     }
-    await Categories.findByIdAndDelete(id);
-    return categoryToDelete;
+    await Categories.findByIdAndDelete(id)
+    return categoryToDelete
   }
 
-  async patchById(id: string, newData) {   
-      const categoryToUpdate = await Categories.findById(id);
-      if (!categoryToUpdate) {
-          throw new Error("La categoría no existe");
-      }
-      Object.assign(categoryToUpdate, newData);
-      await categoryToUpdate.save();
-      return categoryToUpdate;
+  async patchById(id: string, newData) {
+    const categoryToUpdate = await Categories.findById(id)
+    if (!categoryToUpdate) {
+      throw new Error("La categoría no existe")
+    }
+    Object.assign(categoryToUpdate, newData)
+    await categoryToUpdate.save()
+    return categoryToUpdate
   }
+
+  async findThirdCategory() {
+    const categories = await Categories.find().catch((error) => {
+      console.log('Error while connecting to the DB', error)
+    })
+
+    if (!categories || categories.length < 3) {
+      throw boom.notFound('Third category not found')
+    }
+
+    return categories[2]
+  }
+
 
 }
 

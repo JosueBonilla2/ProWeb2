@@ -9,6 +9,17 @@ import { ObjectId } from 'mongoose'
 const router = express.Router()
 const service = new CategoryService()
 
+router.get('/findThirdCategory', async (req, res, next) => {
+  try {
+    const categoryf = await service.findThirdCategory()
+    res.status(200).json(categoryf)
+
+  } catch (error) {
+    next(error)
+  }
+
+})
+
 router.post('/', passport.authenticate('jwt', {session:false}),
 async (req: jwtRequestType, res) => {
   const { 
